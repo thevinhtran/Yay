@@ -78,7 +78,7 @@ def Newton(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-6):
     while(answer.error > accept_error):
         Jacobian = J_x_num(sys_eqn, ind_vars, answer.solution)
         Fx_min = -F_x_num(sys_eqn, ind_vars, answer.solution)
-        y = np.linalg.solve(Jx, Fx_min)
+        y = np.linalg.solve(J_x, Fx_min)
         
         prior_solution = answer.solution
         answer.solution = answer.solution + y
@@ -106,7 +106,7 @@ def update(A_old_inv, s_new, y_new):
     two = np.matmul(s_new, A_old_inv)
     three = np.outer(one, two)
     
-    A_new_inv = A_0_inv + 1/prod*three
+    A_new_inv = A_old_inv + 1/prod*three
     
     return A_new_inv
 
