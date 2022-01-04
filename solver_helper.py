@@ -7,8 +7,12 @@ import sympy as sym
 hc = 197.33
 
 # common symbols
-Pi = sym.symbols('Pi')
+Pi = sym.symbols('pi')
 
+# coupling constant symbols 
+g_sigma_N_sym, g_omega_N_sym, g_rho_N_sym, g_phi_N_sym = sym.symbols('g_sigma_N, g_omega_N, g_rho_N, g_phi_N')
+b_sym, c_sym = sym.symbols('b, c')
+g_sigma_H_sym, g_omega_H_sym, g_rho_H_sym, g_phi_H_sym = sym.symbols('g_sigma_H, g_omega_H, g_rho_H, g_phi_H')
 
 # Class declaration 
 class eos:
@@ -216,7 +220,7 @@ def scalar_density(baryon):
     return coeff_1*coeff_2*(term_2 - baryon.mass_eff**2*term_3)
 
 
-def sigma_eom(baryon_list):
+def sigma_eom_init(baryon_list):
     # returns symbolic sigma equation of motion in a mostly simplified form 
     
     term_1 = sigma_sym.mass**2*sigma_sym.field 
@@ -230,7 +234,18 @@ def sigma_eom(baryon_list):
 
     return term_1 + term_2 + term_3 - tot
 
+def sigma_eom(baryon_list):
+    # substitutes into fully symbolic sigma EOM for
+    # effective mass and effective energy to get a function in terms of 
+    # fermi momenta and sigma field 
 
+    result = sigma_eom_init(baryon_list)
+
+    for baryon in baryon_list:
+        result = result.subs(baryon.ef, sym.sqrt(baryon.kf**2 + baryon.mass_eff**2))
+        result = result.subs(baryon.mass_eff, baryon.mass - baryon.g_sigma * sigma_sym.field)
+    
+    return result 
 
 # omega meson EOM
 
@@ -359,6 +374,32 @@ def baryon_num_conservation(baryon_list):
     return 3*Pi**2*sym.symbols('n_B') 
 
 
+""" System of Equations Generator 
+        - Takes the above and generates our system of equations 
+"""
+def sys_eqn_gen(baryon_sym_list, lepton_sym_list):
+    # function to generate all our equations and to store in an array
+    # called sys_eqn_gen 
+    func_gen = [sigma_eom, omega_eom, rho_eom, phi_eom, beta_equilibrium,\
+                    charge_conservation, baryon_num_conservation]
+    sys_eqn = []
+    
+    for function in func_gen:
+        if (function == charge_conservation):
+            # since charge conservation depends on both baryons and leptons
+            sys_eqn.append(function(baryon_sym_list, lepton_sym_list))
+        elif (function == beta_equilibrium):
+             # beta condition function returns an array with multiple equations
+            # we unpack that here
+            beta_conditions = function(baryon_sym_list)
+            for equation in beta_conditions:
+                sys_eqn.append(equation)
+        else:
+            sys_eqn.append(function(baryon_sym_list))
+            
+    return sys_eqn
+
+
 """ Substitution Function 
     - Up to this point all of our expressions have been symbolic which makes it easy
     - to verify their legitimateness. Now we want to perform numerical calculations
@@ -403,5 +444,5 @@ def fraction(fermi, nB):
 
 
 """ Would be good to then include things here that do the solving
-    for us
+    for us 
 """
