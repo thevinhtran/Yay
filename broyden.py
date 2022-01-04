@@ -78,7 +78,7 @@ def Newton(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-6):
     while(answer.error > accept_error):
         Jacobian = J_x_num(sys_eqn, ind_vars, answer.solution)
         Fx_min = -F_x_num(sys_eqn, ind_vars, answer.solution)
-        y = np.linalg.solve(J_x, Fx_min)
+        y = np.linalg.solve(Jacobian, Fx_min)
         
         prior_solution = answer.solution
         answer.solution = answer.solution + y
