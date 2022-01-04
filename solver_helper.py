@@ -38,11 +38,12 @@ class eos:
 class baryon:
     # baryon class, stores both symbolic and numeric values in a single class 
     # baryon particle 
-    def __init__(self, spin, isospin, charge, kind, var_type,\
+    def __init__(self, name, spin, isospin, charge, kind, var_type,\
                 sym_mass, sym_mass_eff, sym_density, sym_frac, sym_kf, sym_ef, sym_chem_pot,\
                 num_mass = 0.0, num_mass_eff = 0.0, num_density = 0.0, num_frac = 0.0, num_kf = 0.0, num_ef = 0.0, num_chem_pot = 0.0):
 
         # variables common to both classes
+        self.name = name
         self.kind = kind
         self.var_type = var_type 
         self.charge = charge 
@@ -83,10 +84,10 @@ class baryon:
 
 class lepton:
     # lepton particle 
-    def __init__(self, charge, var_type,\
+    def __init__(self, name, charge, var_type,\
                 sym_mass, sym_density, sym_frac, sym_kf, sym_chem_pot,\
                 num_mass = 0.0, num_density = 0.0, num_frac = 0.0, num_kf = 0.0, num_chem_pot = 0.0):
-        
+        self.name = name
         self.charge = charge
         self.var_type = var_type
 
@@ -105,7 +106,8 @@ class lepton:
 
 
 class meson:
-    def __init__(self, sym_mass, sym_field, num_mass, num_field = 0.0):
+    def __init__(self, name, sym_mass, sym_field, num_mass, num_field = 0.0):
+        self.name = name 
         self.sym_mass = sym_mass # in MeV
         self.sym_field = sym_field
 
@@ -126,46 +128,46 @@ class meson:
 """ Baryons """
 
 # symbolic baryon objects
-Proton = baryon(spin = 1/2, isospin = 1/2, charge = 1, kind = 'Nucleon', var_type = 'Dependent',\
+Proton = baryon(name = 'Proton', spin = 1/2, isospin = 1/2, charge = 1, kind = 'Nucleon', var_type = 'Dependent',\
                 sym_mass = sym.symbols('m_p'), sym_mass_eff = sym.symbols('m_p^*'), sym_density = sym.symbols('n_p'),\
                 sym_frac = sym.symbols('x_p'), sym_kf = sym.symbols('k_p'), sym_ef = sym.symbols('E^*_p'), sym_chem_pot = sym.symbols('mu_p'),\
                 num_mass = 939.0)
 
-Neutron = baryon(spin = 1/2, isospin = -1/2, charge = 0.0, kind = 'Nucleon', var_type = 'Dependent',\
+Neutron = baryon(name = 'Neutron', spin = 1/2, isospin = -1/2, charge = 0.0, kind = 'Nucleon', var_type = 'Dependent',\
                 sym_mass = sym.symbols('m_n'), sym_mass_eff = sym.symbols('m_n^*'), sym_density = sym.symbols('n_n'),\
                 sym_frac = sym.symbols('x_n'), sym_kf = sym.symbols('k_n'), sym_ef = sym.symbols('E^*_n'), sym_chem_pot = sym.symbols('mu_n'),\
                 num_mass = 939.0)
 
-Lambda = baryon(spin = 1/2, isospin = 0, charge = 0, kind = 'Nucleon', var_type = 'Indepdent',\
+Lambda = baryon(name = 'Lambda', spin = 1/2, isospin = 0, charge = 0, kind = 'Nucleon', var_type = 'Indepdent',\
                 sym_mass = sym.symbols('m_Lambda'), sym_mass_eff =  sym.symbols('m_Lambda^*'), sym_density = sym.symbols('n_Lambda'),\
                 sym_frac =  sym.symbols('x_Lambda'), sym_kf = sym.symbols('k_Lambda'), sym_ef = sym.symbols('E^*_Lambda'), sym_chem_pot = sym.symbols('mu_Lambda'),\
                 num_mass = 1116.0)
 
-Sigma_neu = baryon(spin = 1/2, isospin = 1.0, charge = 0.0, kind = 'Hyperon', var_type = '',\
+Sigma_neu = baryon(name = 'Sigma_0', spin = 1/2, isospin = 1.0, charge = 0.0, kind = 'Hyperon', var_type = '',\
                     sym_mass = sym.symbols('m_Sigma_0'), sym_mass_eff = sym.symbols('m_Sigma_0^*'),\
                     sym_density = sym.symbols('n_Sigma_0'), sym_frac = sym.symbols('x_Sigma_0'), sym_kf = sym.symbols('k_Sigma'),\
                     sym_ef = sym.symbols('E^*_Sigma'), sym_chem_pot = sym.symbols('mu_Sigma'),\
                     num_mass = 1192.642)
 
-Sigma_plus = baryon(spin = 1/2, isospin = 1.0, charge = 1.0, kind = 'Hyperon', var_type = '',\
+Sigma_plus = baryon(name = 'Sigma_+', spin = 1/2, isospin = 1.0, charge = 1.0, kind = 'Hyperon', var_type = '',\
                     sym_mass = sym.symbols('m_Sigma_+'), sym_mass_eff = sym.symbols('m_Sigma_+^*'),\
                     sym_density = sym.symbols('n_Sigma_+'), sym_frac = sym.symbols('x_Sigma_+'), sym_kf = sym.symbols('k_Sigma_+'),\
                     sym_ef = sym.symbols('E^*_Sigma_+'), sym_chem_pot = sym.symbols('mu_Sigma_+'),\
                     num_mass = 1189.37)
 
-Sigma_min = baryon(spin = 1/2, isospin = 1.0, charge = -1.0, kind = 'Hyperon', var_type = '',\
+Sigma_min = baryon(name = 'Sigma_-', spin = 1/2, isospin = 1.0, charge = -1.0, kind = 'Hyperon', var_type = '',\
                     sym_mass = sym.symbols('m_Sigma_-'), sym_mass_eff = sym.symbols('m_Sigma_-^*'),\
                     sym_density = sym.symbols('n_Sigma_-'), sym_frac = sym.symbols('x_Sigma_-'), sym_kf = sym.symbols('k_Sigma_-'),\
                     sym_ef = sym.symbols('E^*_Sigma_-'), sym_chem_pot = sym.symbols('mu_Sigma_-'),\
                     num_mass = 1197.5)
 
-xi_neu_sym = baryon(spin = 1/2, isospin = 1/2, charge = 0.0, kind = 'Hyperon', var_type = '',\
+xi_neu_sym = baryon(name = 'Xi_0', spin = 1/2, isospin = 1/2, charge = 0.0, kind = 'Hyperon', var_type = '',\
                     sym_mass = sym.symbols('m_Xi_0'), sym_mass_eff =  sym.symbols('m_Xi_0^*'),\
                     sym_density = sym.symbols('n_Xi_0'), sym_frac = sym.symbols('x_Xi_0'), sym_kf =  sym.symbols('k_Xi_0'),\
                     sym_ef = sym.symbols('E^*_Xi_0'), sym_chem_pot = sym.symbols('mu_Xi_0'),\
                     num_mass = 1314.86)
 
-xi_min_sym = baryon(spin = 1/2, isospin = 1/2, charge = -1.0, kind = 'Hyperon', var_type = '',\
+xi_min_sym = baryon(name = 'Xi_-', spin = 1/2, isospin = 1/2, charge = -1.0, kind = 'Hyperon', var_type = '',\
                     sym_mass = sym.symbols('m_Xi_-'), sym_mass_eff = sym.symbols('m_Xi_-^*'),\
                     sym_density = sym.symbols('n_Xi_-'), sym_frac = sym.symbols('x_Xi_-'), sym_kf = sym.symbols('k_Xi_-'),\
                     sym_ef = sym.symbols('E^*_Xi_-'), sym_chem_pot = sym.symbols('mu_Xi_-'),\
@@ -175,12 +177,12 @@ xi_min_sym = baryon(spin = 1/2, isospin = 1/2, charge = -1.0, kind = 'Hyperon', 
 """ Leptons """
 
 # symbolic lepton objects 
-electron = lepton(charge = -1.0, var_type = 'Independent',\
+electron = lepton(name = 'electron', charge = -1.0, var_type = 'Independent',\
                 sym_mass = sym.symbols('m_e'), sym_density = sym.symbols('n_e'), sym_frac = sym.symbols('x_e'),\
                 sym_kf = sym.symbols('k_e'), sym_chem_pot = sym.symbols('\mu_e'),\
                 num_mass = 0.510)
 
-muon = lepton(charge = -1.0, var_type = 'Dependent',\
+muon = lepton(name = 'muon', charge = -1.0, var_type = 'Dependent',\
             sym_mass = sym.symbols('m_mu'), sym_density = sym.symbols('n_mu'), sym_frac = sym.symbols('x_\mu'),\
             sym_kf = sym.symbols('k_mu'), sym_chem_pot =  sym.symbols('\mu_mu'),\
             num_mass = 105.65) 
@@ -191,10 +193,10 @@ muon = lepton(charge = -1.0, var_type = 'Dependent',\
 """ Mesons """
 
 # symbolic meson objects 
-sigma = meson(sym_mass = sym.symbols('m_sigma'), sym_field = sym.symbols('sigma'), num_mass = 550.0)
-omega = meson(sym_mass = sym.symbols('m_omega'), sym_field = sym.symbols('omega'), num_mass = 783.0)
-rho = meson(sym_mass = sym.symbols('m_rho'), sym_field = sym.symbols('rho'), num_mass = 770.0)
-phi = meson(sym_mass = sym.symbols('m_phi'), sym_field = sym.symbols('phi'), num_mass = 1020.0)
+sigma = meson(name = 'sigma', sym_mass = sym.symbols('m_sigma'), sym_field = sym.symbols('sigma'), num_mass = 550.0)
+omega = meson(name = 'omega', sym_mass = sym.symbols('m_omega'), sym_field = sym.symbols('omega'), num_mass = 783.0)
+rho = meson(name = 'rho', sym_mass = sym.symbols('m_rho'), sym_field = sym.symbols('rho'), num_mass = 770.0)
+phi = meson(name = 'phi', sym_mass = sym.symbols('m_phi'), sym_field = sym.symbols('phi'), num_mass = 1020.0)
 
 
 
@@ -380,7 +382,7 @@ def baryon_num_conservation(baryon_list):
     result = 0 
     for baryon in baryon_list:
         result += baryon.sym_kf**3
-    return 3*Pi**2*sym.symbols('n_B') 
+    return 3*Pi**2*sym.symbols('n_B')  + result 
 
 
 """ System of Equations Generator 
@@ -443,6 +445,13 @@ def substitution(equation, baryon_list, meson_list, lepton_list):
     return equation 
 
 
+def subs(sys_eqn, baryon_list, meson_list, lepton_list):
+    # performs substitution on entire set of equations 
+    for i in range(len(sys_eqn)):
+        sys_eqn[i] = substitution(sys_eqn[i], baryon_list, meson_list, lepton_list)
+    return sys_eqn 
+
+
 """ Fraction finder """
 
 def fraction(fermi, nB):
@@ -455,3 +464,27 @@ def fraction(fermi, nB):
 """ Would be good to then include things here that do the solving
     for us 
 """
+
+def column_name(baryon_list, meson_list, lepton_list):
+    # generate column names
+    # this is used to create the Dataframe in which we store our values
+    # Data frame is well suited to Jupyter visualization which is great! 
+    # can convert/extract to numpy array too I suppose 
+    
+    columns = ['nB/n0']
+    
+    for meson in meson_list:
+        columns.append(meson.name + " " + 'field (MeV)')
+        
+    for baryon in baryon_list:
+        columns.append(baryon.name + " " + 'kF (MeV)')
+        columns.append(baryon.name + " " + 'frac')
+        columns.append(baryon.name + " " + 'chem pot (MeV)')
+        
+    for lepton in lepton_list:
+        columns.append(lepton.name + " " + "kF (MeV)")
+        columns.append(lepton.name + " " + "frac")
+        columns.append(lepton.name + " " + "chem pot (MeV)")
+    
+    
+    return columns
