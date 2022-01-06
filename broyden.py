@@ -17,7 +17,6 @@ class solution:
 class broyden_solution:
     def __init__(self, solution):
         self.solution = solution
-        
         self.F_x_current = 0.0 
         self.A_current_inv = 0.0 
         
@@ -65,7 +64,7 @@ def err(x_1, x_2):
     return np.sqrt(np.dot(diff,diff))
 
 
-def Newton(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-6):
+def Newton(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-8):
     
     # timer variables 
     start = time.time()
@@ -111,7 +110,7 @@ def update(A_old_inv, s_new, y_new):
     return A_new_inv
 
 
-def broyden(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-6):
+def broyden(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-8):
     # timer variables 
     start = time.time()
     end = 0.0 
