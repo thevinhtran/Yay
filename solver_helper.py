@@ -591,7 +591,7 @@ def bare_chemical_potential(baryon, meson_list):
         elif (meson == rho):
             bare_chem += baryon.num_g_rho * baryon.isospin * rho.num_field 
         elif (meson == phi):
-            bare_chem += baroyn.num_g_phi * rho.num_field 
+            bare_chem += baryon.num_g_phi * rho.num_field 
     return bare_chem 
 
 
@@ -709,14 +709,14 @@ def frac(fermi, nb):
     return fermi**3 /3/np.pi**2/nb
 
 
-def full_solve(eos, baryon_list, lepton_list, meson_list, npe_guess):
+def full_solve(eos, baryon_list, lepton_list, meson_list, npe_guess, solver_method = 'broyden'):
     # full solver 
     
     # initialize all things... 
     init(eos, baryon_list, meson_list)
     
     # create nB array 
-    nB = np.arange  (0.27, 0.50, 0.01) #nB/n0
+    nB = np.arange(0.27, 0.50, 0.01) #nB/n0
     nB_mev = nB*n0*hc**3 #nB_mev in mev+3 
     
     # create data array (pre-allocate)
@@ -756,14 +756,14 @@ def full_solve(eos, baryon_list, lepton_list, meson_list, npe_guess):
             if (Bool):
                 current_baryons.append(potential_baryons[0])
                 potential_baryons.remove(potential_baryons[0])
-                x_guess.append('10.0')
+                x_guess = np.append(x_guess, 10.0)
         
         if (potential_leptons[0] != 'None'):
             Bool = lepton_threshold(potential_leptons[0])
             if (Bool):
                 current_leptons.append(potential_leptons[0])
                 potential_leptons.remove(potential_leptons[0])
-                x_guess.append('10.0')
+                x_guess = np.append(x_guess, 10.0)
         
         # 
         init(eos, baryon_list, meson_list)
@@ -777,12 +777,16 @@ def full_solve(eos, baryon_list, lepton_list, meson_list, npe_guess):
         
         # call solver, broyden returns a vector with solutions to independent variables
         # very importantly, the independent variables are ordered: sigma, omega, rho, phi
-        answer = broyden(sys_eqn, ind_vars, x_guess)
+        if (solver_method == 'broyden'):
+            answer = broyden(sys_eqn, ind_vars, x_guess)
+        elif (solver_method == 'newton'):
+            answer = Newton(sys_eqn, ind_vars, x_guess)
         
         # append values to data file 
-        for j in range(column_size - len(baryon_list + lepton_list) - 1):
+        #for j in range(column_size - len(current_baryons + current_leptons) - 1):
+        #    data[i][j+1] = answer[j]
+        for j in range(len(ind_vars)):
             data[i][j+1] = answer[j]
-        
         
         # update important values
         pseudo_dict = [ind_vars, answer]

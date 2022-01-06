@@ -93,7 +93,7 @@ def Newton(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-8):
             print("Not converged")
             break 
             
-    return answer
+    return answer.solution
 
 
 def update(A_old_inv, s_new, y_new):
