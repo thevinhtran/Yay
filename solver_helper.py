@@ -807,7 +807,7 @@ def full_solve(eos, baryon_list, lepton_list, meson_list, npe_guess):
     for rem in range(len(nB)):
         for emilia in range(len(ind_vars) - len(meson_list)):
             data[rem][emilia + len(meson_list + baryon_list + lepton_list) + 1]\
-                = frac(data[rem][0]*n0*hc**3, data[rem][emilia + len(meson_list) + 1])
+                = frac(data[rem][emilia + len(meson_list) + 1], data[rem][0]*n0*hc**3)
          
     # convert data array to dataframe 
     data_frame = pd.DataFrame(data, columns = column_name(baryon_list, meson_list, lepton_list))
