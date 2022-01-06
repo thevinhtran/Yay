@@ -75,3 +75,11 @@ class baryon:
         self.num_g_omega = 0.0 
         self.num_g_rho = 0.0 
         self.num_g_phi = 0.0
+
+
+
+class lepton: 
+
+
+
+class meson: 
