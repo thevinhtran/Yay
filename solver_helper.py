@@ -716,7 +716,7 @@ def full_solve(eos, baryon_list, lepton_list, meson_list, npe_guess, solver_meth
     init(eos, baryon_list, meson_list)
     
     # create nB array 
-    nB = np.arange(0.27, 0.50, 0.01) #nB/n0
+    nB = np.arange(0.27, 1.2, 0.01) #nB/n0
     nB_mev = nB*n0*hc**3 #nB_mev in mev+3 
     
     # create data array (pre-allocate)
