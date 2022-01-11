@@ -106,6 +106,28 @@ class lepton:
         self.num_kf = num_kf
         self.num_chem_pot = num_chem_pot
 
+def partial_omega(nb, baryon_list, ind_var):
+    result = 0
+    for baryon in baryon_list:
+        result += baryon.sym_g_omega * nb * baryon.sym_frac 
+    result = result/omega.sym_mass**2
+    return result.diff(ind_var) 
+
+def partial_rho(nb, baryon_list, ind_var):
+    result = 0 
+    for baryon in baryon_list:
+        result += baryon.sym_g_rho * baryon.sym_frac * nb * baryon.isospin 
+    result = result/rho.sym_mass**2 
+    return result.diff(ind_var) 
+
+def partial_phi(nb, baryon_list, ind_var):
+    result = 0 
+    for baryon in baryon_list: 
+        result += baryon.sym_g_phi * nb * baryon.sym_frac 
+    result = result/omega.sym_mass**2
+    return result.diff(ind_var)
+
+
 
 class meson:
     def __init__(self, name, sym_mass, sym_field, num_mass, num_field = 0.0, sym_g_N = 0.0, sym_g_H = 0.0, num_g_N = 0.0, num_g_H = 0.0, partial = partial_omega):
@@ -147,7 +169,7 @@ Neutron = baryon(name = 'Neutron', spin = 1/2, isospin = -1/2, charge = 0.0, kin
                 sym_frac = sym.symbols('x_n'), sym_kf = sym.symbols('k_n'), sym_ef = sym.symbols('E^*_n'), sym_chem_pot = sym.symbols('mu_n'),\
                 num_mass = 939.0)
 
-Lambda = baryon(name = 'Lambda', spin = 1/2, isospin = 0, charge = 0, kind = 'Nucleon', var_type = 'Indepdent',\
+Lambda = baryon(name = 'Lambda', spin = 1/2, isospin = 0, charge = 0, kind = 'Hyperon', var_type = 'Indepdent',\
                 sym_mass = sym.symbols('m_Lambda'), sym_mass_eff =  sym.symbols('m_Lambda^*'), sym_density = sym.symbols('n_Lambda'),\
                 sym_frac =  sym.symbols('x_Lambda'), sym_kf = sym.symbols('k_Lambda'), sym_ef = sym.symbols('E^*_Lambda'), sym_chem_pot = sym.symbols('mu_Lambda'),\
                 num_mass = 1116.0)
@@ -211,3 +233,63 @@ rho = meson(name = 'rho', sym_mass = sym.symbols('m_rho'), sym_field = sym.symbo
 phi = meson(name = 'phi', sym_mass = sym.symbols('m_phi'), sym_field = sym.symbols('phi'), num_mass = 1020.0,\
             sym_g_N = sym.symbols('g_phi_N'), sym_g_H = sym.symbols('g_phi_H'), partial = partial_phi)
 
+
+
+
+
+def baryon_coupling(baryon, eos ):
+    if (baryon.kind == 'Nucleon'):
+        baryon.sym_g_sigma = g_sigma_N_sym
+        baryon.sym_g_omega = g_omega_N_sym
+        baryon.sym_g_rho = g_rho_N_sym
+        baryon.sym_g_phi = g_phi_N_sym
+
+        baryon.num_g_sigma = eos.g_sigma_N
+        baryon.num_g_omega = eos.g_omega_N
+        baryon.num_g_rho = eos.g_rho_N
+        baryon.num_g_phi = eos.g_phi_N
+
+    elif (baryon.kind == 'Hyperon'):
+        baryon.sym_g_sigma = g_sigma_H_sym
+        baryon.sym_g_omega = g_omega_H_sym
+        baryon.sym_g_rho = g_rho_H_sym
+        baryon.sym_g_phi = g_phi_H_sym
+
+        baryon.num_g_sigma = eos.g_sigma_H
+        baryon.num_g_omega = eos.g_omega_H
+        baryon.num_g_rho = eos.g_rho_H
+        baryon.num_g_phi = eos.g_phi_H
+
+
+# load in sigma field self coupling 
+def sigma_coupling(eos):
+    sigma.num_b = eos.b
+    sigma.num_c = eos.c 
+
+# meson load 
+def meson_coupling(eos, meson_list):
+    for meson in meson_list:
+        if (meson == sigma):
+            meson.num_g_N = eos.g_sigma_N
+            meson.num_g_N = eos.g_sigma_H
+        elif (meson == omega):
+            meson.num_g_N = eos.g_omega_N
+            meson.num_g_N = eos.g_omega_H
+        elif (meson == rho):
+            meson.num_g_N = eos.g_rho_N
+            meson.num_g_N = eos.g_rho_H
+        elif (meson == phi): 
+            meson.num_g_N = eos.g_phi_N
+            meson.num_g_N = eos.g_phi_H
+
+def init_system(eos, meson_list, baryon_list):
+    for baryon in baryon_list:
+        baryon_coupling(baryon, eos)
+
+    # re-write dependent variables in term of independent variables
+    Proton.sym_frac = electron.sym_frac
+    Neutron.sym_frac = 1 - Proton.sym_frac 
+    
+    meson_coupling(eos, meson_list)
+
+    sigma_coupling(eos)
