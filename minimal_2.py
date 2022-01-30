@@ -15,6 +15,7 @@ g_sigma_H_sym, g_omega_H_sym, g_rho_H_sym, g_phi_H_sym = sym.symbols('g_sigma_H,
 
 
 
+nb = sym.symbol('n_B')
 
 # minimal classes 
 

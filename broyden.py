@@ -110,7 +110,7 @@ def update(A_old_inv, s_new, y_new):
     return A_new_inv
 
 
-def broyden(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-8):
+def broyden(sys_eqn, ind_vars, initial_guess, accept_error = 1.0E-10):
     # timer variables 
     start = time.time()
     end = 0.0 
